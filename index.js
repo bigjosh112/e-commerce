@@ -11,7 +11,7 @@ const productRoutes = require('./routes/productRoutes')
 const morgan = require('morgan')
 
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT
 dbConnect()
 
 app.use(morgan('dev'));
