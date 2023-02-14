@@ -1,7 +1,7 @@
 const bodyParser = require('body-parser');
 const { application } = require('express');
 const express = require('express')
-const dbConnect = require('./config/dbConnect')
+const connectDB = require('./config/dbConnect')
 const notFound = require('./middleware/errorHandler')
 const app = express();
 const dotenv = require('dotenv').config()
@@ -12,7 +12,7 @@ const morgan = require('morgan')
 
 
 const PORT = process.env.PORT
-dbConnect()
+connectDB();
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
