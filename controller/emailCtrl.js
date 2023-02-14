@@ -1,20 +1,31 @@
 const nodemailer = require('nodemailer');
 const asyncHandler = require('express-async-handler');
 
-const sendEmail = asyncHandler(async (data, req, res) => {
+
+const sendMail = asyncHandler(async (data, req, res) => {
+    //console.log('beep')
     let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
+      host: "smtp.gmail.com",
         port: 587,
         secure: false, // true for 465, false for other ports
         auth: {
           user: process.env.MAIL_ID, // generated ethereal user
           pass:  process.env.MP, // generated ethereal password
         },
+        //var transport = nodemailer.createTransport({
+      //   host: "sandbox.smtp.mailtrap.io",
+      //   port: 2525,
+      //   auth: {
+      //     user: "c3a87d5088afe6",
+      //     pass: "ff702367410f01"
+       
       });
+        
+           
     
       // send mail with defined transport object
       let info = await transporter.sendMail({
-        from: '"Hey 👻" <abc@example.com.com>', // sender address
+        from: '"Hey 👻" <oladayoakinola28@gmail.com>', // sender address
         to: data.to, // list of receivers
         subject: data.subject, // Subject line
         text: data.text, // plain text body
@@ -31,4 +42,4 @@ const sendEmail = asyncHandler(async (data, req, res) => {
 });
 
 
-module.export = sendEmail;
+module.exports = sendMail;

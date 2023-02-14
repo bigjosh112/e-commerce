@@ -4,7 +4,8 @@ const createUser = require('../controller/userCtrl')
 const auth = require('../middleware/auth')
 
 router.post('/register',  createUser.createUser);
-router.post('/forgot-password',  createUser.forgotPasswordToken);
+router.post('/forgot-password-token',  createUser.forgotPasswordToken);
+router.post('/reset-password/:token',  createUser.resetPassword);
 router.post('/login',  createUser.loginUserCtrl);
 router.post('/updatepassword', auth.auth, createUser.updatePassword);
 router.post('/all-users',  createUser.getallUser);

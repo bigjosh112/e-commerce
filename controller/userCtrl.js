@@ -8,6 +8,8 @@ const auth = require('../middleware/auth')
 const validateMongoDbId = require('../utils/validationMongodbid')
 const generateRefreshToken = require('../config/refreshtoken');
 const jwt  = require('jsonwebtoken');
+const sendMail = require('./emailCtrl');
+const crypto = require('crypto');
 
 
 //create a user
@@ -230,8 +232,36 @@ exports.forgotPasswordToken = asyncHandler(async(req, res)=> {
     try{
         const token = await user.createPasswordResetToken();
         await user.save();
+        const resetURL = `Hi, Please follow this link to rest Your Password. This link is valid for 10 minutes from now. <a href = 'http://localhost:5000/api/user/reset-password/${token}'> Click Here</>`
+        
+        const data = {
+            to: email,
+            text: "Hey User",
+            subject: "Forgot Password Link",
+            htm: resetURL,
+        };
+        sendMail(data);
+    //     console.log(data)
+    //    sendEmail[data];
+        res.json(token);
     }catch(error){
         throw new Error(error)
     }
+});
+
+exports.resetPassword = asyncHandler(async(req, res)=> {
+    const { password } = req.body;
+    const { token } = req.params;
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+    const user = await User.findOne({
+        passowrdResetToken: hashedToken,
+        passowrdResetExpires: {$gt: Date.now() },
+    });
+    if(!user) throw new Error(" Token Expired. Please try adain later");
+    user.password = password;
+    user.passowrdResetToken = undefined;
+    user.passowrdResetExpires = undefined;
+    await user.save();
+    res.json(user);
 })
 //module.export = this.createUser
